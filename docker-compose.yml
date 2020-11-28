@@ -1,0 +1,26 @@
+version: '3'
+services:
+    db:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: highcairn
+          MYSQL_ROOT_PASSWORD: ${APP_DATABASE_ROOT_PASSWORD}
+          MYSQL_USER: ${APP_DATABASE_USER}
+          MYSQL_PASSWORD: ${APP_DATABASE_PASSWORD}
+        volumes:
+            # 永続化するときにマウントするdir
+            - ./db:/var/lib/mysql
+        ports:
+          - "3306:3306"
+
+    app:
+        build: app
+        environment:
+            APP_DATABASE_USER: ${APP_DATABASE_USER}
+            APP_DATABASE_PASSWORD: ${APP_DATABASE_PASSWORD}
+        volumes:
+            - ./app:/var/www
+        ports:
+            - "8888:8888"
+        links:
+            - db
