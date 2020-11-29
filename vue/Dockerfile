@@ -8,6 +8,8 @@ RUN npm install axios@0.18.1
 RUN npm install vuesax
 RUN npm install material-icons
 RUN npm install vue-router
+RUN npm install markdown-it
+RUN npm install markdown-it-katex
 
 WORKDIR /www
 

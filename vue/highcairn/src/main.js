@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Vuesax from 'vuesax'
+import Router from 'vue-router'
 import App from './App.vue'
 import TopPage from './components/pages/TopPage.vue'
 import EditPage from './components/pages/EditPage.vue'
-import Router from 'vue-router'
 
-import 'vuesax/dist/vuesax.css'
 import 'material-icons/iconfont/material-icons.css'
+import 'vuesax/dist/vuesax.css'
 
 
 Vue.config.productionTip = false

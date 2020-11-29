@@ -1,5 +1,5 @@
 <template>
-<vs-navbar v-model="activeItem" class="nabarx">
+<vs-navbar class="nabarx">
     <div slot="title">
     <vs-navbar-title>
         {{ title }}

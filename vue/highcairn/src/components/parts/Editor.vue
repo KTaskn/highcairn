@@ -1,24 +1,33 @@
 <template>
   <div>
-    <vs-textarea v-model="value" height="80%"/>
+    <textarea id="content" v-model="content" class="widthfull"/>
   </div>
 </template>
 <script>
 export default {
     data: () => {
       return {
-        value: ""
+        content: ""
       }
     },
     methods: {
     },
     watch: {
-      value: function(changed) {
+      content: function(changed) {
         this.$emit('edit', changed)
       }
     }
 }
 </script>
 <style scoped>
-
+.widthfull {
+  width: 100%;
+}
+#content {
+  resize: none;
+  position: absolute;
+  top:0;
+  bottom:0;
+  left:0;
+}
 </style>
