@@ -9,7 +9,7 @@ RUN npm install
 
 RUN mkdir -p /var/www/highcairn
 WORKDIR /var/www/highcairn
-ADD ./package.json $project_dir
+ADD ./highcairn/package.json /var/www/highcairn
 RUN npm install
 
 CMD ["npm", "run", "dev"]
