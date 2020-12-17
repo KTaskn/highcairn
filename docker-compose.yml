@@ -23,10 +23,9 @@ services:
     build: ./front
     volumes:
       - ./front:/var/www
-      - /var/www/node_modules
-      - /var/www/highcairn/node_modules
     ports:
       - "3000:3000"
+    command: sh /var/www/init.sh
   nginx:
     build: ./nginx
     volumes:
