@@ -1,24 +1,45 @@
 import React from 'react'
+import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Viewer from '../components/viewer'
 
 const Edit: React.FC = () => {
-  const [text, setText] = React.useState('');
-  const handleChange = (event) => {
-    setText(event.target.value)
+  const [content, setContent] = React.useState('');
+  const contentChange = (event) => {
+    setContent(event.target.value)
+  }
+  const [headline, setHeadline] = React.useState('');
+  const headlineChange = (event) => {
+    setHeadline(event.target.value)
   }
   return (
     <div>
-        <TextField
-          id="outlined-multiline-static"
-          label="Editor"
-          multiline
-          rows={25}
-          value={text}
-          onChange={handleChange}
-          variant="outlined"
-        />
-        <Viewer markdown_text={text} />
+      <Grid container>
+          <Grid item xs={12}>
+            <TextField
+              id="headline"
+              value={headline}
+              onChange={headlineChange}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              id="contents"
+              multiline
+              rows={25}
+              rowsMax={25}
+              value={content}
+              onChange={contentChange}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Viewer markdown_text={content} />
+          </Grid>
+      </Grid>
     </div>
   )
   }

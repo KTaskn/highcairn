@@ -1,6 +1,6 @@
 import * as MarkdownIt from 'markdown-it'
 import mk from 'markdown-it-katex'
-import styles from 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css'
+import 'katex/dist/katex.min.css'
 
 const md = new MarkdownIt()
 md.use(mk)
