@@ -1,6 +1,9 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
+import EditIcon from '@material-ui/icons/Edit'
 import Viewer from '../components/viewer'
 
 const Edit: React.FC = () => {
@@ -15,7 +18,7 @@ const Edit: React.FC = () => {
   return (
     <div>
       <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={11}>
             <TextField
               id="headline"
               value={headline}
@@ -23,6 +26,12 @@ const Edit: React.FC = () => {
               variant="outlined"
               fullWidth
             />
+          </Grid>
+          <Grid item xs={1}>
+            <Button>
+              Submit
+              <EditIcon />
+            </Button>
           </Grid>
           <Grid item xs={6}>
             <TextField
