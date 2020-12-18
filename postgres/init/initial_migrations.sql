@@ -1,2 +1,2 @@
  /* DATABASEを作成 */
-CREATE DATABASE tmdbapp;
+CREATE DATABASE highcairn;

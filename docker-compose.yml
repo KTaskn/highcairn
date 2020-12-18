@@ -19,13 +19,6 @@ services:
       - ./app:/var/www
     ports:
       - "8000:8000"
-  front:
-    build: ./front
-    volumes:
-      - ./front:/var/www
-    ports:
-      - "3000:3000"
-    command: sh /var/www/init.sh
   nginx:
     build: ./nginx
     volumes:
