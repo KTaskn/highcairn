@@ -11,9 +11,9 @@ const Edit: React.FC = () => {
   const contentChange = (event) => {
     setContent(event.target.value)
   }
-  const [headline, setHeadline] = React.useState('');
-  const headlineChange = (event) => {
-    setHeadline(event.target.value)
+  const [title, setTitle] = React.useState('');
+  const titleChange = (event) => {
+    setTitle(event.target.value)
   }
   return (
     <div>
@@ -21,8 +21,8 @@ const Edit: React.FC = () => {
           <Grid item xs={11}>
             <TextField
               id="headline"
-              value={headline}
-              onChange={headlineChange}
+              value={title}
+              onChange={titleChange}
               variant="outlined"
               fullWidth
             />
