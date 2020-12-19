@@ -63,7 +63,7 @@ const Edit: React.FC = () => {
             />
           </Grid>
           <Grid item xs={6}>
-            <Viewer markdown_text={content} />
+            <Viewer content={content} />
           </Grid>
       </Grid>
     </div>
