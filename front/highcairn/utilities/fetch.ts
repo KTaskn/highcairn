@@ -10,8 +10,13 @@ export default class Fetch {
         }
     }
 
-    public static async get<T>(endpoint: string, key?: number): Promise<T> {
-        const res = await fetch(this.generateEndpoint(endpoint, key), {
+    public static async get<T>(endpoint: string, key?: number, ssr?: boolean): Promise<T> {
+        let url = this.generateEndpoint(endpoint, key)
+        if (ssr) {
+            url = "http://nginx:80" + url
+        }
+
+        const res = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

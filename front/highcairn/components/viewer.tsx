@@ -12,8 +12,8 @@ const ViewwerStyle = styled.div`
   }
 `
 
-const Viewer: React.FC<{markdown_text: string}> = ({markdown_text}) => {
-  let html: string = md.render(markdown_text)
+const Viewer: React.FC<{content: string}> = ({content}) => {
+  let html: string = md.render(content)
   return (
     <div>
       <ViewwerStyle className="viewer" dangerouslySetInnerHTML={{__html: html}}></ViewwerStyle>
