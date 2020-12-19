@@ -10,7 +10,7 @@ export default class Fetch {
         }
     }
 
-    public static async get<T>(endpoint: string, key: number): Promise<T> {
+    public static async get<T>(endpoint: string, key?: number): Promise<T> {
         const res = await fetch(this.generateEndpoint(endpoint, key), {
             method: 'GET',
             headers: {
