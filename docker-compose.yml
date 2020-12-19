@@ -38,6 +38,7 @@ services:
       - ./app/static:/static
     links:
       - app
+      - front
     ports:
       - "${NGINX_PORT:-8888}:80"
     environment:
