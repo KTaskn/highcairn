@@ -9,8 +9,8 @@ services:
       - ./postgres/init:/docker-entrypoint-initdb.d
     environment:
       TZ: "Asia/Tokyo"
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PW:-mysecretpassword1234}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mysecretpassword1234}
   app:
     build: ./app
     links:
@@ -21,8 +21,9 @@ services:
       - "8000:8000"
     environment:
       TZ: "Asia/Tokyo"
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PW:-mysecretpassword1234}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mysecretpassword1234}
+      PASSWORD_SALT: ${PASSWORD_SALT:-mysecretpasswordhash}
   front:
     build: ./front
     volumes:
