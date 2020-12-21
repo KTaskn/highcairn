@@ -5,26 +5,19 @@ import Grid from '@material-ui/core/Grid'
 import Fetch from '../utilities/fetch'
 import Post from '../models/post'
 
-class Props {
-  posts: Post[]
+interface Props {
+  posts?: Post[]
 }
 
-export default class Home extends React.Component {
-
-  static async getInitialProps(ctx): Promise<Props> {
+class Home extends React.Component<Props> {
+  static async getInitialProps(ctx) {
     try {
-      let posts: Post[] = await Fetch.get<Post[]>('/api/posts/', null, true)
-
-      return {
-        posts: posts
-      }
+      let posts = await Fetch.get<Post[]>('/api/posts/', null, true)
+      return { posts: posts }
     } catch(ex) {
-      return {
-        posts: []
-      }
+      return { posts: [] }
     }
   }
-
   render() {
     return (
       <div>
@@ -43,3 +36,5 @@ export default class Home extends React.Component {
     )
   }
 }
+
+export default Home

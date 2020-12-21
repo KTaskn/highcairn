@@ -1,6 +1,6 @@
 from rest_framework import routers
-from .views import PostViewSet, UserViewSet
+from .views import PostViewSet, CheckViewSet
 
 router = routers.SimpleRouter()
+router.register('check', CheckViewSet, basename="check")
 router.register('posts', PostViewSet)
-router.register('users', UserViewSet, basename='users')
