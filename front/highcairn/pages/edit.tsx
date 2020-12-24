@@ -1,4 +1,5 @@
 import React from 'react'
+import { NextPage } from 'next'
 import Router from 'next/router'
 
 import Grid from '@material-ui/core/Grid'
@@ -9,8 +10,16 @@ import Viewer from '../components/viewer'
 
 import Post from '../models/post'
 import Fetch from '../utilities/fetch'
+import { truncate } from 'fs'
 
-const Edit: React.FC = () => {
+interface Props {
+  result: boolean 
+}
+
+const Edit: NextPage<Props> = ({ result }) => {
+  const jumpTopPage = () => {
+    Router.push('/')
+  }
   const [content, setContent] = React.useState('');
   const contentChange = (event) => {
     setContent(event.target.value)
@@ -19,11 +28,6 @@ const Edit: React.FC = () => {
   const titleChange = (event) => {
     setTitle(event.target.value)
   }
-
-  const jumpTopPage = () => {
-    Router.push('/')
-  }
-
   const uploadPost = () => {
     Fetch.post<Post>('/api/posts/', new Post({title: title, content: content})).then((res) => {
       jumpTopPage()
@@ -32,8 +36,8 @@ const Edit: React.FC = () => {
     })
   }
 
-  return (
-    <div>
+  if (result) {
+    return (<div>
       <Grid container spacing={2}>
           <Grid item xs={11}>
             <TextField
@@ -66,8 +70,35 @@ const Edit: React.FC = () => {
             <Viewer content={content} />
           </Grid>
       </Grid>
-    </div>
-  )
+    </div>)
+  } else {
+    return <div>no auth</div>
   }
+}
+
+Edit.getInitialProps = async ({ req }) => {
+  const checkSession = async (): Promise<Props> => {
+    return await Fetch.get<Props>('/api/check/', null, true, {
+      'Content-Type': 'application/json',
+      'cookie': req.headers.cookie
+    }).then((response) => {
+      if (response.raw.ok) {
+        return {
+          result: true
+        }
+      } else {
+        return {
+          result: false
+        }
+      }
+    }).catch((error) => {
+      console.log(error)
+      return {
+        result: false
+      }
+    })
+  }
+  return await checkSession()
+}
 
 export default Edit
