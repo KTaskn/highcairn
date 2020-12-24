@@ -7,6 +7,23 @@ interface Response<T> {
 }
 
 export default class Fetch {
+    static readonly HEADER_TEMPLATE: any = {
+        'Content-Type': 'application/json'
+    }
+
+    public static initialize_header(headers?: any): any {
+        if (headers) {
+            for (let key in Fetch.HEADER_TEMPLATE) {
+                if (!(key in headers)) {
+                    headers[key] = Fetch.HEADER_TEMPLATE[key]
+                }
+            }
+            return headers
+        } else {
+            return Fetch.HEADER_TEMPLATE
+        }
+    }
+    
     private static generateEndpoint(endpoint: string, key?: number): string {
         if (key) {
             return endpoint + key
@@ -15,30 +32,17 @@ export default class Fetch {
         }
     }
 
-    static readonly HEADER_TEMPLATE = {
-        'Content-Type': 'application/json'
-    }
-
     public static async get<T>(endpoint: string, key?: number, ssr?: boolean, headers?: any): Promise<Response<T>> {
         let url = this.generateEndpoint(endpoint, key)
         if (ssr) {
             url = "http://nginx:80" + url
         }
 
-        if (headers) {
-            for (let key in Fetch.HEADER_TEMPLATE) {
-                if (!(key in headers)) {
-                    headers[key] = Fetch.HEADER_TEMPLATE[key]
-                }
-            }
-        } else {
-
-        }
-
         const response = await fetch(url, {
             method: 'GET',
             headers: headers
         })
+        console.log(response)
         const data: T = await response.json()
         return {
             bound: data,
