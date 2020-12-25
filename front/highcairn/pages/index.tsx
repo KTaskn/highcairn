@@ -2,7 +2,7 @@ import React from 'react'
 import Viewer from '../components/viewer'
 import Grid from '@material-ui/core/Grid'
 
-import Fetch from '../utilities/fetch'
+import FetchWrapper from '../utilities/fetchwrapper'
 import Post from '../models/post'
 
 interface Props {
@@ -12,8 +12,8 @@ interface Props {
 class Home extends React.Component<Props> {
   static async getInitialProps(ctx) {
     try {
-      let posts = await Fetch.get<Post[]>('/api/posts/', null, true)
-      return { posts: posts }
+      let posts = await FetchWrapper.get4ssr<Post[]>('/api/posts/')
+      return { posts: posts.bound }
     } catch(ex) {
       return { posts: [] }
     }

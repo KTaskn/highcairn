@@ -9,7 +9,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import Viewer from '../components/viewer'
 
 import Post from '../models/post'
-import Fetch from '../utilities/fetch'
+import FetchWrapper from '../utilities/fetchwrapper'
 import { truncate } from 'fs'
 
 interface Props {
@@ -29,7 +29,7 @@ const Edit: NextPage<Props> = ({ result }) => {
     setTitle(event.target.value)
   }
   const uploadPost = () => {
-    Fetch.post<Post>('/api/posts/', new Post({title: title, content: content})).then((res) => {
+    FetchWrapper.post<Post, Post>('/api/posts/', new Post({title: title, content: content})).then((res) => {
       jumpTopPage()
     }).catch((error) => {
       console.log(error)
@@ -78,7 +78,7 @@ const Edit: NextPage<Props> = ({ result }) => {
 
 Edit.getInitialProps = async ({ req }) => {
   const checkSession = async (): Promise<Props> => {
-    return await Fetch.get<Props>('/api/check/', null, true, {
+    return await FetchWrapper.get4ssr<Props>('/api/check/', {
       'Content-Type': 'application/json',
       'cookie': req.headers.cookie
     }).then((response) => {
