@@ -1,9 +1,9 @@
 .viewer {
+    color: #555555;
     & h1 {
-        text-decoration: underline;
-        font-size:25.6px;
+        border-bottom: 1px solid #555555;
     }
-    & p {
-        font-size:16px
+    & h2 {
+        border-bottom: 1px solid #555555;
     }
 }

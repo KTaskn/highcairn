@@ -1,8 +1,7 @@
-.post {
-    & h1 {
-        font-size: 40px;
-        color: #333333;
-    }
+.title {
+    font-size: 40px;
+    color: #333333;
+
     & a:link, a:visited, a:hover, a:active {
         color: #333333;
         text-decoration: none;

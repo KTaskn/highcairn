@@ -8,8 +8,8 @@ interface Props {
 }
 
 const Post: React.FC<Props> = (props) => (
-    <div className={style.post} >
-        <h1><a href={`/post/${props.postmodel.id}`}>{props.postmodel.title}</a></h1>
+    <div>
+        <h1 className={style.title}><a href={`/post/${props.postmodel.id}`}>{props.postmodel.title}</a></h1>
         <Viewer content={props.postmodel.content}/>
     </div>
 )
