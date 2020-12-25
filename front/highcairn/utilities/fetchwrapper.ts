@@ -43,18 +43,23 @@ export default class FetchWrapper {
         }
     }
 
-    public static async get<T>(endpoint: string, headers?: any, key?: number): Promise<Response<T>> {
+    public static async get<TResponse>(endpoint: string, headers?: any, key?: number): Promise<Response<TResponse>> {
         let url = this.generateEndpoint(endpoint, key)
 
         const response = await fetch(url, {
             method: 'GET',
             headers: this.initialize_header(headers)
         })
-        const data: T = await response.json()
+        const data: TResponse = await response.json()
         return {
             bound: data,
             raw: response
         }
+    }
+
+    public static async get4ssr<TResponse>(endpoint: string, headers?: any, key?: number): Promise<Response<TResponse>> {
+        endpoint = urljoin(process.env.BACKEND_URL, endpoint)
+        return await this.get(endpoint, headers, key)
     }
 
     public static async post<TRequest, TResponse>(endpoint: string, body: TRequest, headers?: any): Promise<Response<TResponse>> {

@@ -188,3 +188,11 @@ test('test Post Url Default with no protocol', async () => {
     expect(actual_value.bound.url).toEqual(expect_value)
 })
 
+
+test('test Get SSR', async () => {
+    process.env.BACKEND_URL = "http://example.com"
+    let expect_value: string = 'http://example.com/api/test'
+    let actual_value = await FetchWrapper.get4ssr<Dumy>('/api/test', {})
+    expect(actual_value.bound.url).toEqual(expect_value)
+})
+
