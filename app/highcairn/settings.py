@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'highcairnapp.apps.HighcairnappConfig',
     'rest_framework',
     'drf_yasg',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -131,5 +132,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 REST_FRAMEWORK = {
    'DEFAULT_AUTHENTICATION_CLASSES': [
        'rest_framework.authentication.SessionAuthentication',
-   ]
+   ],
+   'DEFAULT_FILTER_BACKENDS': [
+       'django_filters.rest_framework.DjangoFilterBackend'
+    ]
 }

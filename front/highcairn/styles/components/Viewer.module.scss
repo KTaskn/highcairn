@@ -1,5 +1,9 @@
 .viewer {
+    color: #555555;
     & h1 {
-        text-decoration: underline;
+        border-bottom: 1px solid #555555;
+    }
+    & h2 {
+        border-bottom: 1px solid #555555;
     }
 }

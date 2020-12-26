@@ -18,7 +18,7 @@ interface Props {
 
 const Edit: NextPage<Props> = ({ result }) => {
   const jumpTopPage = () => {
-    Router.push('/')
+    document.location.href = '/'
   }
   const [content, setContent] = React.useState('');
   const contentChange = (event) => {

@@ -1,18 +1,18 @@
 import React from 'react'
-import Viewer from '../components/viewer'
 import Grid from '@material-ui/core/Grid'
 
 import FetchWrapper from '../utilities/fetchwrapper'
-import Post from '../models/post'
+import PostModel from '../models/post'
+import PostComponent from '../components/post'
 
 interface Props {
-  posts?: Post[]
+  posts?: PostModel[]
 }
 
 class Home extends React.Component<Props> {
   static async getInitialProps(ctx) {
     try {
-      let posts = await FetchWrapper.get4ssr<Post[]>('/api/posts/')
+      let posts = await FetchWrapper.get4ssr<PostModel[]>('/api/posts/', null, null, {ordering: "-id"})
       return { posts: posts.bound }
     } catch(ex) {
       return { posts: [] }
@@ -25,10 +25,7 @@ class Home extends React.Component<Props> {
           <Grid item xs={1}></Grid>
           <Grid item xs={11}>
             { this.props.posts.map((a_post, idx) => (
-              <div key={idx}>
-                <h1>{a_post.title}</h1>
-                <Viewer content={a_post.content}/>
-              </div>
+              <PostComponent key={idx} postmodel={a_post}/>
             )) }
           </Grid>
         </Grid>

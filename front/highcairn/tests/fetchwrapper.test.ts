@@ -2,6 +2,7 @@
 import { Response } from "node-fetch"
 import Cookies from 'js-cookie'
 import FetchWrapper from '../utilities/fetchwrapper'
+import urlparse from 'url'
 
 
 // mockの設定ここから
@@ -13,7 +14,8 @@ const fetch_mock = (input: RequestInfo, init?: RequestInit): Promise<any> => {
             JSON.stringify({
                 headers: init.headers,
                 url: input,
-                method: init.method
+                method: init.method,
+                url_query: urlparse.parse(input.toString(), true).query
             }),
             {
                 status: 200,
@@ -34,7 +36,8 @@ fetch.mockImplementation(fetch_mock)
 interface Dumy {
     headers?: any,
     url?: any,
-    method?: any
+    method?: any,
+    url_query?: any
 }
 
 test('test Get Method', async () => {
@@ -110,6 +113,19 @@ test('test Get Url with key and endslash', async () => {
     let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test/', null, 123)
     expect(actual_value.bound.url).toEqual(expect_value)
 })
+
+
+test('test Get With parameters', async () => {
+    let params: any = {
+        hoge: "fuga",
+        piyo: "piyo"
+    }
+    let expect_value: any = params
+    let actual_value = await FetchWrapper.get<Dumy>('http://example.com/api/test', {}, null, params)
+    console.log(actual_value.bound.url)
+    expect(actual_value.bound.url_query).toEqual(expect_value)
+})
+
 
 test('test Post Method', async () => {
     let expect_value: string = 'POST'
