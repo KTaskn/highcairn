@@ -85,4 +85,20 @@ export default class FetchWrapper {
             raw: response
         }
     }
+
+    public static async put<TRequest, TResponse>(endpoint: string, key: number, body: TRequest, headers?: any): Promise<Response<TResponse>> {
+        headers = this.initialize_header(headers)
+        headers['X-CSRFToken'] = Cookies.get('csrftoken')
+
+        const response = await fetch(this.generateEndpoint(endpoint, key), {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        const data: TResponse = await response.json()
+        return {
+            bound: data,
+            raw: response
+        }
+    }
 }
