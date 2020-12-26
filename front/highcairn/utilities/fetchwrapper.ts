@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-unfetch'
 import Cookies from 'js-cookie'
 import urljoin from 'url-join'
+import querystring from 'querystring'
 
 interface Response<T> {
     raw: globalThis.Response,
@@ -35,16 +36,23 @@ export default class FetchWrapper {
      * @param endpoint エンドポイント
      * @param key 主キー
      */
-    private static generateEndpoint(endpoint: string, key?: number): string {
+    private static generateEndpoint(endpoint: string, key?: number, query?: any): string {
+        let ret: string = ""
         if (key) {
-            return urljoin(endpoint, String(key))
+            ret = urljoin(endpoint, String(key))
         } else {
-            return urljoin(endpoint)
+            ret = urljoin(endpoint)
         }
+
+        if (query) {
+            ret = urljoin(ret, '?' + querystring.encode(query))
+        }
+
+        return ret
     }
 
-    public static async get<TResponse>(endpoint: string, headers?: any, key?: number): Promise<Response<TResponse>> {
-        let url = this.generateEndpoint(endpoint, key)
+    public static async get<TResponse>(endpoint: string, headers?: any, key?: number, params?: any): Promise<Response<TResponse>> {
+        let url = this.generateEndpoint(endpoint, key, params)
 
         const response = await fetch(url, {
             method: 'GET',
@@ -57,9 +65,9 @@ export default class FetchWrapper {
         }
     }
 
-    public static async get4ssr<TResponse>(endpoint: string, headers?: any, key?: number): Promise<Response<TResponse>> {
+    public static async get4ssr<TResponse>(endpoint: string, headers?: any, key?: number, params?: any): Promise<Response<TResponse>> {
         endpoint = urljoin(process.env.BACKEND_URL, endpoint)
-        return await this.get(endpoint, headers, key)
+        return await this.get(endpoint, headers, key, params)
     }
 
     public static async post<TRequest, TResponse>(endpoint: string, body: TRequest, headers?: any): Promise<Response<TResponse>> {
