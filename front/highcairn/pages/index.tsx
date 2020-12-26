@@ -12,7 +12,7 @@ interface Props {
 class Home extends React.Component<Props> {
   static async getInitialProps(ctx) {
     try {
-      let posts = await FetchWrapper.get4ssr<PostModel[]>('/api/posts/')
+      let posts = await FetchWrapper.get4ssr<PostModel[]>('/api/posts/', null, null, {ordering: "-id"})
       return { posts: posts.bound }
     } catch(ex) {
       return { posts: [] }
