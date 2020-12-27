@@ -4,3 +4,4 @@ from .views import PostViewSet, CheckViewSet
 router = routers.SimpleRouter()
 router.register('check', CheckViewSet, basename="check")
 router.register('posts', PostViewSet)
+urlpatterns = router.urls

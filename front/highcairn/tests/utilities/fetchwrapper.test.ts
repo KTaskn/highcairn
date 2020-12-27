@@ -1,7 +1,7 @@
 
 import { Response } from "node-fetch"
 import Cookies from 'js-cookie'
-import FetchWrapper from '../utilities/fetchwrapper'
+import FetchWrapper from '../../utilities/fetchwrapper'
 import urlparse from 'url'
 
 
