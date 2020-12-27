@@ -4,8 +4,6 @@ import FetchWrapper from '../../../utilities/fetchwrapper'
 import PostModel from '../../../models/post'
 import PostComponent from '../../../components/post'
 
-import style from '../../../styles/pages/post/Post.module.scss'
-
 interface Props {
   postmodel?: PostModel
 }
@@ -35,8 +33,7 @@ class Post extends React.Component<Props> {
             </Grid>
           </Grid>
         </div>
-      )
-      
+      )      
     } else {
       return <p>データがありません</p>
     }

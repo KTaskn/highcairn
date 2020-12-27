@@ -39,9 +39,9 @@ export default class FetchWrapper {
     private static generateEndpoint(endpoint: string, key?: number, query?: any): string {
         let ret: string = ""
         if (key) {
-            ret = urljoin(endpoint, String(key))
+            ret = urljoin(endpoint, String(key), "/")
         } else {
-            ret = urljoin(endpoint)
+            ret = urljoin(endpoint, "/")
         }
 
         if (query) {
@@ -76,6 +76,22 @@ export default class FetchWrapper {
 
         const response = await fetch(this.generateEndpoint(endpoint), {
             method: 'POST',
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        const data: TResponse = await response.json()
+        return {
+            bound: data,
+            raw: response
+        }
+    }
+
+    public static async put<TRequest, TResponse>(endpoint: string, key: number, body: TRequest, headers?: any): Promise<Response<TResponse>> {
+        headers = this.initialize_header(headers)
+        headers['X-CSRFToken'] = Cookies.get('csrftoken')
+
+        const response = await fetch(this.generateEndpoint(endpoint, key), {
+            method: 'PUT',
             headers: headers,
             body: JSON.stringify(body)
         })
