@@ -118,7 +118,6 @@ test('test Get With parameters', async () => {
     }
     let expect_value: any = params
     let actual_value = await FetchWrapper.get<Dumy>('http://example.com/api/test/', {}, null, params)
-    console.log(actual_value.bound.url)
     expect(actual_value.bound.url_query).toEqual(expect_value)
 })
 
