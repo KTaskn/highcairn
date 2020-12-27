@@ -5,6 +5,7 @@ module.exports = {
     includePaths: [path.join(__dirname, 'styles')],
   },
   env: {
+    TITLE: "俺のブログ",
     BACKEND_URL: "http://nginx:80"
   }
 }
