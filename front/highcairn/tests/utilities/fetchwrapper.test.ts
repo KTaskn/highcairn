@@ -52,7 +52,7 @@ test('test Get Header Default', async () => {
     let expect_value: any = {
         'Content-Type': 'application/json'
     }
-    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test')
+    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test/')
     expect(actual_value.bound.headers).toEqual(expect_value)
 })
 
@@ -63,7 +63,7 @@ test('test Get InitializeHeader replace', async () => {
     let input_value: any = {
         'Content-Type': 'application/form'
     }
-    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test', input_value)
+    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test/', input_value)
     expect(actual_value.bound.headers).toEqual(expect_value)
 })
 
@@ -75,7 +75,7 @@ test('test Get InitializeHeader set input', async () => {
     let input_value: any = {
         'any_header': 'header_value'
     }
-    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test', input_value)
+    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test/', input_value)
     expect(actual_value.bound.headers).toEqual(expect_value)
 })
 
@@ -88,30 +88,24 @@ test('test Get InitializeHeader set input', async () => {
         'any_header': 'header_value',
         'Content-Type': 'application/form',
     }
-    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test', input_value)
+    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test/', input_value)
     expect(actual_value.bound.headers).toEqual(expect_value)
 })
 
 test('test Get Url Default', async () => {
-    let expect_value: string = 'http://localhost/api/test'
-    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test')
+    let expect_value: string = 'http://localhost/api/test/'
+    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test/')
     expect(actual_value.bound.url).toEqual(expect_value)
 })
 
 test('test Get Url Default with no protocol', async () => {
-    let expect_value: string = '/api/test'
-    let actual_value = await FetchWrapper.get<Dumy>('/api/test')
-    expect(actual_value.bound.url).toEqual(expect_value)
-})
-
-test('test Get Url with key', async () => {
-    let expect_value: string = 'http://localhost/api/test/123'
-    let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test', null, 123)
+    let expect_value: string = '/api/test/'
+    let actual_value = await FetchWrapper.get<Dumy>('/api/test/')
     expect(actual_value.bound.url).toEqual(expect_value)
 })
 
 test('test Get Url with key and endslash', async () => {
-    let expect_value: string = 'http://localhost/api/test/123'
+    let expect_value: string = 'http://localhost/api/test/123/'
     let actual_value = await FetchWrapper.get<Dumy>('http://localhost/api/test/', null, 123)
     expect(actual_value.bound.url).toEqual(expect_value)
 })
@@ -123,15 +117,15 @@ test('test Get With parameters', async () => {
         piyo: "piyo"
     }
     let expect_value: any = params
-    let actual_value = await FetchWrapper.get<Dumy>('http://example.com/api/test', {}, null, params)
+    let actual_value = await FetchWrapper.get<Dumy>('http://example.com/api/test/', {}, null, params)
     console.log(actual_value.bound.url)
     expect(actual_value.bound.url_query).toEqual(expect_value)
 })
 
 test('test Get SSR', async () => {
     process.env.BACKEND_URL = "http://example.com"
-    let expect_value: string = 'http://example.com/api/test'
-    let actual_value = await FetchWrapper.get4ssr<Dumy>('/api/test', {})
+    let expect_value: string = 'http://example.com/api/test/'
+    let actual_value = await FetchWrapper.get4ssr<Dumy>('/api/test/', {})
     expect(actual_value.bound.url).toEqual(expect_value)
 })
 
@@ -204,21 +198,21 @@ test('test Post InitializeHeader set input with Cookie', async () => {
 })
 
 test('test Post Url Default', async () => {
-    let expect_value: string = 'http://localhost/api/test'
-    let actual_value = await FetchWrapper.post<any, Dumy>('http://localhost/api/test', {})
+    let expect_value: string = 'http://localhost/api/test/'
+    let actual_value = await FetchWrapper.post<any, Dumy>('http://localhost/api/test/', {})
     expect(actual_value.bound.url).toEqual(expect_value)
 })
 
 test('test Post Url Default with no protocol', async () => {
-    let expect_value: string = '/api/test'
-    let actual_value = await FetchWrapper.post<any, Dumy>('/api/test', {})
+    let expect_value: string = '/api/test/'
+    let actual_value = await FetchWrapper.post<any, Dumy>('/api/test/', {})
     expect(actual_value.bound.url).toEqual(expect_value)
 })
 
 test('test Post Body', async () => {
     let input_value: any = {fuga: "hoge"}
     let expect_value: any = JSON.stringify(input_value)
-    let actual_value = await FetchWrapper.post<any, Dumy>('/api/test', input_value)
+    let actual_value = await FetchWrapper.post<any, Dumy>('/api/test/', input_value)
     expect(actual_value.bound.body).toEqual(expect_value)
 })
 
@@ -292,13 +286,13 @@ test('test Post InitializeHeader set input with Cookie', async () => {
 })
 
 test('test Post Url Default', async () => {
-    let expect_value: string = 'http://localhost/api/test/1'
+    let expect_value: string = 'http://localhost/api/test/1/'
     let actual_value = await FetchWrapper.put<any, Dumy>('http://localhost/api/test/', 1, {})
     expect(actual_value.bound.url).toEqual(expect_value)
 })
 
 test('test Post Url Default with no protocol', async () => {
-    let expect_value: string = '/api/test/1'
+    let expect_value: string = '/api/test/1/'
     let actual_value = await FetchWrapper.put<any, Dumy>('/api/test/', 1, {})
     expect(actual_value.bound.url).toEqual(expect_value)
 })
@@ -306,6 +300,6 @@ test('test Post Url Default with no protocol', async () => {
 test('test Put Body', async () => {
     let input_value: any = {fuga: "hoge"}
     let expect_value: any = JSON.stringify(input_value)
-    let actual_value = await FetchWrapper.put<any, Dumy>('/api/test', 1, input_value)
+    let actual_value = await FetchWrapper.put<any, Dumy>('/api/test/', 1, input_value)
     expect(actual_value.bound.body).toEqual(expect_value)
 })

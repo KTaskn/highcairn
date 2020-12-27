@@ -39,9 +39,9 @@ export default class FetchWrapper {
     private static generateEndpoint(endpoint: string, key?: number, query?: any): string {
         let ret: string = ""
         if (key) {
-            ret = urljoin(endpoint, String(key))
+            ret = urljoin(endpoint, String(key), "/")
         } else {
-            ret = urljoin(endpoint)
+            ret = urljoin(endpoint, "/")
         }
 
         if (query) {
