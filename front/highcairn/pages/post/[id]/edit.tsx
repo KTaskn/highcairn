@@ -7,8 +7,8 @@ import Post from '../../../models/post'
 class LocalEditComponent extends EditComponent {
   public post_id: number
 
-  constructor(post_id: number) {
-    super()
+  constructor(init_content:string, init_title:string, post_id: number) {
+    super(init_content, init_title)
     this.post_id = post_id
   }
 
@@ -27,21 +27,36 @@ class LocalEditComponent extends EditComponent {
 
 interface Props {
   cookie?: any,
-  post_id: number
+  post_id: number,
+  post: Post
 }
 
 class Edit extends React.Component<Props> {
   render() {
-    let obj = new LocalEditComponent(this.props.post_id)
+    let obj = new LocalEditComponent(this.props.post.content, this.props.post.title, this.props.post_id)
     let FC = obj.rendering
     return <AuthComponent cookie={this.props.cookie} FC={FC} />
   }
 
   public static async getInitialProps({ req, query }) {
-    return {
+    let response = await FetchWrapper.get4ssr<Post>('/api/posts/', {}, query.id)
+    let post: Post
+    if (response.raw.ok) {
+      post = response.bound
+
+      return {
         cookie: req.headers.cookie,
-        post_id: query.id
+        post_id: query.id,
+        post: post
+      }
+    } else {
+      return {
+        cookie: req.headers.cookie,
+        post_id: query.id,
+        post: new Post({title: "", content: ""})
+      }
     }
+
   }
 }
 

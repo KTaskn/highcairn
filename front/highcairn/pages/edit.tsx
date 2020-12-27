@@ -24,7 +24,7 @@ interface Props {
 
 class Edit extends React.Component<Props> {
   render() {
-    let obj = new LocalEditComponent()
+    let obj = new LocalEditComponent("", "")
     let FC = obj.rendering
     return <AuthComponent cookie={this.props.cookie} FC={FC} />
   }

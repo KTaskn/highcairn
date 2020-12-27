@@ -5,16 +5,29 @@ import TextField from '@material-ui/core/TextField'
 import EditIcon from '@material-ui/icons/Edit'
 import Viewer from '../components/viewer'
 
+interface EditProps {
+  init_content: string,
+  init_title: string
+}
+
 class Edit {
+  private init_content: string
+  private init_title: string
+  
+  constructor(init_content: string, init_title: string) {
+    this.init_content = init_content
+    this.init_title = init_title
+  }
+
   protected clickFunction(title, content) {
   }
 
   public rendering: React.FC = () => {
-    const [content, setContent] = React.useState('');
+    const [content, setContent] = React.useState(this.init_content)
     const contentChange = (event) => {
       setContent(event.target.value)
     }
-    const [title, setTitle] = React.useState('');
+    const [title, setTitle] = React.useState(this.init_title)
     const titleChange = (event) => {
       setTitle(event.target.value)
     }
