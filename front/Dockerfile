@@ -13,3 +13,4 @@ WORKDIR /var/www/highcairn
 RUN npm install
 
 CMD npm run dev
+# CMD npm run start
