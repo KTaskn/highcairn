@@ -11,4 +11,6 @@ RUN mkdir -p /var/www/highcairn
 ADD ./highcairn/package.json /var/www/highcairn
 WORKDIR /var/www/highcairn
 RUN npm install
+
 CMD npm run dev
+# CMD npm run start
