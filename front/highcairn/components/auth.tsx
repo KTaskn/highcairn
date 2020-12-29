@@ -36,7 +36,6 @@ class Auth extends React.Component<Props> {
     
     protected async checkSession(cookie: any): Promise<boolean> {
         let response =  await FetchWrapper.get<CheckResponse>('/api/check/', {
-            'Content-Type': 'application/json',
             'cookie': cookie
         })
 

@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import urljoin from 'url-join'
 import querystring from 'querystring'
 
-interface Response<T> {
+export interface Response<T> {
     raw: globalThis.Response,
     bound: T
 }
