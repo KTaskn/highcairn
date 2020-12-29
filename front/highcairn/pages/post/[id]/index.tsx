@@ -11,7 +11,7 @@ interface Props {
 class Post extends React.Component<Props> {
   static async getInitialProps({query}) {
     try {
-      let response = await FetchWrapper.get4ssr<PostModel>('/api/posts/', null, query.id)
+      let response = await FetchWrapper.get4ssr<PostModel>('/api/publicposts/', null, query.id)
       if (response.raw.ok) {
         return { postmodel: response.bound }
       } else {

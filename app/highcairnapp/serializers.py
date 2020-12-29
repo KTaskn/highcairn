@@ -8,3 +8,11 @@ class PostSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return super().create(validated_data)
+
+class PostUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('id', 'title', 'content', 'public', 'created_at', 'updated_at')
+    
+    def create(self, validated_data):
+        return super().create(validated_data)

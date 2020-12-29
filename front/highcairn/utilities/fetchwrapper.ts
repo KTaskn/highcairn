@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import urljoin from 'url-join'
 import querystring from 'querystring'
 
-interface Response<T> {
+export interface Response<T> {
     raw: globalThis.Response,
     bound: T
 }
@@ -94,6 +94,21 @@ export default class FetchWrapper {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(body)
+        })
+        const data: TResponse = await response.json()
+        return {
+            bound: data,
+            raw: response
+        }
+    }
+
+    public static async delete<TResponse>(endpoint: string, key: number, headers?: any): Promise<Response<TResponse>> {
+        headers = this.initialize_header(headers)
+        headers['X-CSRFToken'] = Cookies.get('csrftoken')
+
+        const response = await fetch(this.generateEndpoint(endpoint, key), {
+            method: 'DELETE',
+            headers: headers
         })
         const data: TResponse = await response.json()
         return {

@@ -1,22 +1,7 @@
 import React from 'react'
-import FetchWrapper from '../utilities/fetchwrapper'
 import EditComponent from '../components/edit'
 import AuthComponent from '../components/auth'
 import Post from '../models/post'
-
-class LocalEditComponent extends EditComponent {
-  private jumpTopPage = () => {
-    document.location.href = '/'
-  }
-
-  protected clickFunction(title, content) {    
-    FetchWrapper.post<Post, Post>('/api/posts/', new Post({title: title, content: content})).then((res) => {
-      this.jumpTopPage()
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-}
 
 interface Props {
   cookie?: any
@@ -24,7 +9,7 @@ interface Props {
 
 class Edit extends React.Component<Props> {
   render() {
-    let obj = new LocalEditComponent("", "")
+    let obj = new EditComponent(new Post({title: "", content: "", id: null, public: false}))
     let FC = obj.rendering
     return <AuthComponent cookie={this.props.cookie} FC={FC} />
   }
