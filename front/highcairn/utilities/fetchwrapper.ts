@@ -101,4 +101,19 @@ export default class FetchWrapper {
             raw: response
         }
     }
+
+    public static async delete<TResponse>(endpoint: string, key: number, headers?: any): Promise<Response<TResponse>> {
+        headers = this.initialize_header(headers)
+        headers['X-CSRFToken'] = Cookies.get('csrftoken')
+
+        const response = await fetch(this.generateEndpoint(endpoint, key), {
+            method: 'DELETE',
+            headers: headers
+        })
+        const data: TResponse = await response.json()
+        return {
+            bound: data,
+            raw: response
+        }
+    }
 }

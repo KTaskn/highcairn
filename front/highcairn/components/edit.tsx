@@ -60,6 +60,16 @@ class Edit {
       return FetchWrapper.post<Post, Post>('/api/posts/', post)
     }
   }
+
+  private delete(post: Post): Promise<Response<Post>> {
+    if (post && post.id) {
+      return FetchWrapper.delete<Post>('/api/posts/', post.id)
+    } else {
+      return new Promise((resolve, reject) => {
+        reject("ERROR");
+      })
+    }
+  }
   
   protected clickSubmit(post: Post) {
     post.public = true
@@ -80,7 +90,11 @@ class Edit {
   }
 
   protected clickDelete(post: Post) {    
-    this.jumpTopPage()
+    this.delete(post).then(() => {
+      this.jumpTopPage()
+    }).catch(() => {
+      console.log("delete error")
+    })
   }
 
   private jumpTopPage = () => {
