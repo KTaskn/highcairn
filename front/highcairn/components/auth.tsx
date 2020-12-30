@@ -10,41 +10,20 @@ interface Props {
     cookie: any
 }
 
-class Auth extends React.Component<Props> {
-    public state: {
-        result: boolean
-    }
+const Auth: React.FC<Props> = ({FC, cookie}) => {
+    const [content, setContent] = React.useState(<div>no auth</div>)
 
-    public constructor(props) {
-        super(props)
-        this.state = {
-            result: false
-        }
-    }
-
-    public render() {
-        this.checkSession(this.props.cookie).then((response) => {
-            this.setState({result: response})
-        })
-
-        if (this.state.result) {
-            return <this.props.FC />
-        } else {
-            return <div>no auth</div>
-        }
-    }
-    
-    protected async checkSession(cookie: any): Promise<boolean> {
-        let response =  await FetchWrapper.get<CheckResponse>('/api/check/', {
+    React.useEffect(() => {
+        let response =  FetchWrapper.get<CheckResponse>('/api/check/', {
             'cookie': cookie
+        }).then((response) => {
+            if (response.raw.ok) {
+                setContent(<FC />)
+            }
         })
+    }, [])
 
-        if (response.raw.ok) {
-            return true
-        } else {
-            return false
-        }
-    }
+    return content
 }
 
 export default Auth

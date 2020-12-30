@@ -30,19 +30,22 @@ class Edit {
   private post: Post
   
   protected sleeptime_timer
+  private auto_save_flag
 
   constructor(post: Post) {
     this.post = post
-    this.sleeptime_timer = 10 * 1000
+    this.sleeptime_timer = 60 * 1000
   }
 
   protected timerFunction() {
-    this.save(this.post).then((response) => {
-      this.post = response.bound
-      console.log("auto save")
-    }).catch((error) => {
-      console.log("auto save error")
-    })
+    if (this.auto_save_flag) {
+      this.save(this.post).then((response) => {
+        this.post = response.bound
+        console.log("auto save")
+      }).catch((error) => {
+        console.log("auto save error")
+      })
+    }
   }
 
   private save(post: Post): Promise<Response<Post>> {
@@ -58,12 +61,21 @@ class Edit {
       return FetchWrapper.delete<Post>('/api/posts/', post.id)
     } else {
       return new Promise((resolve, reject) => {
-        reject("ERROR");
+        reject("ERROR")
       })
     }
   }
+
+  private startAutoSave() {
+    this.auto_save_flag = true
+  }
+  private stopAutoSave() {
+    this.auto_save_flag = false
+  }
   
   protected clickSubmit(post: Post) {
+    // 自動セーブと重なるといやなのでさきに停止する
+    this.stopAutoSave()
     post.public = true
     this.save(post).then(() => {
       this.jumpTopPage()
@@ -73,6 +85,7 @@ class Edit {
   }
 
   protected clickSave(post: Post) {
+    this.stopAutoSave()
     post.public = false
     this.save(post).then(() => {
       this.jumpTopPage()
@@ -81,7 +94,8 @@ class Edit {
     })
   }
 
-  protected clickDelete(post: Post) {    
+  protected clickDelete(post: Post) {  
+    this.stopAutoSave()
     this.delete(post).then(() => {
       this.jumpTopPage()
     }).catch(() => {
@@ -97,21 +111,25 @@ class Edit {
     const [title, setTitle] = React.useState(this.post.title)
     const [content, setContent] = React.useState(this.post.content)
     const titleChange = (event) => {
+      this.post.title = event.target.value
       setTitle(event.target.value)
-      this.post.title = title
     }
     const contentChange = (event) => {
+      this.post.content = event.target.value
       setContent(event.target.value)
-      this.post.content = content
     }
     const [time, updateTime] = React.useState(Date.now())
 
     React.useEffect(() => {
-        const timeoutId: number = setTimeout(() => updateTime(Date.now()), this.sleeptime_timer)
-        return () => {
-            clearTimeout(timeoutId)
-            this.timerFunction()
-        };
+      this.startAutoSave()
+      const timeoutId = setTimeout(
+        () => updateTime(Date.now()),
+        this.sleeptime_timer
+      )
+      return () => {
+          clearTimeout(timeoutId)
+          this.timerFunction()
+      }
     }, [time])
 
     return (<div>
