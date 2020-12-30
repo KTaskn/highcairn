@@ -45,14 +45,6 @@ class Edit {
     })
   }
 
-  private executeTimerFunction() {
-    setTimeout(
-      () => {
-        this.executeTimerFunction()
-      }, this.sleeptime_timer)
-    this.timerFunction()
-  }
-
   private save(post: Post): Promise<Response<Post>> {
     if (post && post.id) {
       return FetchWrapper.put<Post, Post>('/api/posts/', post.id, post)
@@ -102,7 +94,6 @@ class Edit {
   }
 
   public rendering: React.FC = () => {
-    console.log(this.post)
     const [title, setTitle] = React.useState(this.post.title)
     const [content, setContent] = React.useState(this.post.content)
     const titleChange = (event) => {
@@ -113,8 +104,15 @@ class Edit {
       setContent(event.target.value)
       this.post.content = content
     }
+    const [time, updateTime] = React.useState(Date.now())
 
-    this.executeTimerFunction()
+    React.useEffect(() => {
+        const timeoutId: number = setTimeout(() => updateTime(Date.now()), this.sleeptime_timer)
+        return () => {
+            clearTimeout(timeoutId)
+            this.timerFunction()
+        };
+    }, [time])
 
     return (<div>
       <Grid container spacing={2}>
