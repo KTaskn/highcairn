@@ -26,6 +26,9 @@ interface SubmitButtonProps {
   deleteFunction: () => void,
 }
 
+const NUM_SPACES = 4
+const SLEEP_TIMER = 60 * 1000
+
 class Edit {
   private post: Post
   
@@ -34,7 +37,7 @@ class Edit {
 
   constructor(post: Post) {
     this.post = post
-    this.sleeptime_timer = 60 * 1000
+    this.sleeptime_timer = SLEEP_TIMER
   }
 
   protected timerFunction() {
@@ -152,7 +155,7 @@ class Edit {
             }}
             deleteFunction={() => {
               this.clickDelete(this.post)
-              }} />
+            }} />
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -162,6 +165,12 @@ class Edit {
               rowsMax={25}
               value={content}
               onChange={contentChange}
+              onKeyDown={(event) => {
+                if (event.key === 'Tab') {
+                  event.preventDefault()
+                  event.target.value += ' '.repeat(NUM_SPACES)
+                }
+              }}
               variant="outlined"
               fullWidth
             />
