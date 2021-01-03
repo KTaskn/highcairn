@@ -167,8 +167,8 @@ class Edit {
               onChange={contentChange}
               onKeyDown={(event) => {
                 if (event.key === 'Tab') {
-                  event.preventDefault()
-                  event.target.value += ' '.repeat(NUM_SPACES)
+                  event.preventDefault()                  
+                  setContent(content + ' '.repeat(NUM_SPACES))
                 }
               }}
               variant="outlined"
