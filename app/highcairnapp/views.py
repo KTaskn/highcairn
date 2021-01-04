@@ -35,4 +35,3 @@ class PostViewSet(viewsets.ModelViewSet):
     ordering_fields = ['id']
     ordering = ['id']
     serializer_class = PostUpdateSerializer
-    
