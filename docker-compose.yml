@@ -42,6 +42,7 @@ services:
       - app
       - front
     ports:
+      - "${NGINX_PORT_SSL:-18888}:443"
       - "${NGINX_PORT:-8888}:80"
     environment:
       TZ: "Asia/Tokyo"
