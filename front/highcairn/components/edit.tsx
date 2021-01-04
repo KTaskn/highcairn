@@ -14,6 +14,7 @@ import MenuList from '@material-ui/core/MenuList'
 import Viewer from '../components/viewer'
 import FetchWrapper, { Response } from '../utilities/fetchwrapper'
 import Post from '../models/post'
+import TabFunction from '../utilities/tabfunction'
 
 interface EditProps {
   init_content: string,
@@ -34,10 +35,12 @@ class Edit {
   
   protected sleeptime_timer
   private auto_save_flag
+  private tabFunction: TabFunction
 
   constructor(post: Post) {
     this.post = post
     this.sleeptime_timer = SLEEP_TIMER
+    this.tabFunction = new TabFunction(NUM_SPACES)
   }
 
   protected timerFunction() {
@@ -137,47 +140,39 @@ class Edit {
       }
     }, [time])
 
-    const tabFunction = function(event) {
+    const tab = (event) => {
       if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.key === ']') {
         event.preventDefault()
-
-        // ' '.repeat(NUM_SPACES)
         let obj = contentRef.current
-        // 現在のカーソルの位置と、カーソルの左右の文字列を取得しておく
-        let cursorPosition: number = obj.selectionStart
-        let cursorLeft: string = obj.value.substr(0, cursorPosition)
-        let cursorRight: string = obj.value.substr(cursorPosition, obj.value.length)
 
-        let matches: RegExpMatchArray = cursorLeft.match(/^[^]+\n/)
-        if (matches) {
-          let match: string = matches[0]
-          let first: string = cursorLeft.substr(0, match.length)
-          let second: string = cursorLeft.substr(match.length)
-          obj.value = first + ' '.repeat(NUM_SPACES) + second + cursorRight
-          obj.selectionEnd = (first + ' '.repeat(NUM_SPACES) + second).length
-        }
+        // 初期状態を保存しておく
+        let before = obj.value
+        let start = obj.selectionStart
+        let end = obj.selectionEnd
+
+        // タブ挿入後のデータを取得する
+        obj.value = this.tabFunction.shiftTab(obj.value, obj.selectionStart, obj.selectionEnd)
+
+        // 新しい選択範囲に変更する  // 先頭が追加されたのでその分詰める
+        obj.selectionStart = start + NUM_SPACES
+        obj.selectionEnd = end + obj.value.length - before.length
       }
-
 
       if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.key === '[') {
         event.preventDefault()
-
-        // ' '.repeat(NUM_SPACES)
         let obj = contentRef.current
-        // 現在のカーソルの位置と、カーソルの左右の文字列を取得しておく
-        let cursorPosition: number = obj.selectionStart
-        let cursorLeft: string = obj.value.substr(0, cursorPosition)
-        let cursorRight: string = obj.value.substr(cursorPosition, obj.value.length)
 
-        let matches: RegExpMatchArray = cursorLeft.match(/^[^]+\n/)
-        if (matches) {
-          let match: string = matches[0]
-          let first: string = cursorLeft.substr(0, match.length)
-          let second: string = cursorLeft.substr(match.length)
-          second = second.replace(/\s\s\s\s/, '')
-          obj.value = first + second + cursorRight
-          obj.selectionEnd = (first + second).length
-        }
+        // 初期状態を保存しておく
+        let before = obj.value
+        let start = obj.selectionStart
+        let end = obj.selectionEnd
+
+        // タブ削除後のデータを取得する
+        obj.value = this.tabFunction.unshiftTab(obj.value, obj.selectionStart, obj.selectionEnd)
+
+        // 新しい選択範囲に変更する  // 先頭が削除されたのでその分詰める
+        obj.selectionStart = start - NUM_SPACES
+        obj.selectionEnd = end + obj.value.length - before.length
       }
     }
 
@@ -213,7 +208,7 @@ class Edit {
               inputRef={contentRef}
               onChange={contentChange}
               onKeyDown={(event) => {
-                tabFunction(event)
+                tab(event)
               }}
               variant="outlined"
               fullWidth
