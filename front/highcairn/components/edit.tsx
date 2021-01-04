@@ -14,6 +14,7 @@ import MenuList from '@material-ui/core/MenuList'
 import Viewer from '../components/viewer'
 import FetchWrapper, { Response } from '../utilities/fetchwrapper'
 import Post from '../models/post'
+import TabFunction from '../utilities/tabfunction'
 
 interface EditProps {
   init_content: string,
@@ -34,10 +35,12 @@ class Edit {
   
   protected sleeptime_timer
   private auto_save_flag
+  private tabFunction: TabFunction
 
   constructor(post: Post) {
     this.post = post
     this.sleeptime_timer = SLEEP_TIMER
+    this.tabFunction = new TabFunction(NUM_SPACES)
   }
 
   protected timerFunction() {
@@ -111,6 +114,8 @@ class Edit {
   }
 
   public rendering: React.FC = () => {
+    const contentRef = React.useRef()
+
     const [title, setTitle] = React.useState(this.post.title)
     const [content, setContent] = React.useState(this.post.content)
     const titleChange = (event) => {
@@ -134,6 +139,42 @@ class Edit {
           this.timerFunction()
       }
     }, [time])
+
+    const tab = (event) => {
+      if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.key === ']') {
+        event.preventDefault()
+        let obj = contentRef.current
+
+        // 初期状態を保存しておく
+        let before = obj.value
+        let start = obj.selectionStart
+        let end = obj.selectionEnd
+
+        // タブ挿入後のデータを取得する
+        obj.value = this.tabFunction.shiftTab(obj.value, obj.selectionStart, obj.selectionEnd)
+
+        // 新しい選択範囲に変更する  // 先頭が追加されたのでその分詰める
+        obj.selectionStart = start + NUM_SPACES
+        obj.selectionEnd = end + obj.value.length - before.length
+      }
+
+      if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.key === '[') {
+        event.preventDefault()
+        let obj = contentRef.current
+
+        // 初期状態を保存しておく
+        let before = obj.value
+        let start = obj.selectionStart
+        let end = obj.selectionEnd
+
+        // タブ削除後のデータを取得する
+        obj.value = this.tabFunction.unshiftTab(obj.value, obj.selectionStart, obj.selectionEnd)
+
+        // 新しい選択範囲に変更する  // 先頭が削除されたのでその分詰める
+        obj.selectionStart = start - NUM_SPACES
+        obj.selectionEnd = end + obj.value.length - before.length
+      }
+    }
 
     return (<div>
       <Grid container spacing={2}>
@@ -164,12 +205,10 @@ class Edit {
               rows={25}
               rowsMax={25}
               value={content}
+              inputRef={contentRef}
               onChange={contentChange}
               onKeyDown={(event) => {
-                if (event.key === 'Tab') {
-                  event.preventDefault()                  
-                  setContent(content + ' '.repeat(NUM_SPACES))
-                }
+                tab(event)
               }}
               variant="outlined"
               fullWidth
