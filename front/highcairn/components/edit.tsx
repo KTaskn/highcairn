@@ -111,6 +111,8 @@ class Edit {
   }
 
   public rendering: React.FC = () => {
+    const contentRef = React.useRef()
+
     const [title, setTitle] = React.useState(this.post.title)
     const [content, setContent] = React.useState(this.post.content)
     const titleChange = (event) => {
@@ -134,6 +136,50 @@ class Edit {
           this.timerFunction()
       }
     }, [time])
+
+    const tabFunction = function(event) {
+      if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.key === ']') {
+        event.preventDefault()
+
+        // ' '.repeat(NUM_SPACES)
+        let obj = contentRef.current
+        // 現在のカーソルの位置と、カーソルの左右の文字列を取得しておく
+        let cursorPosition: number = obj.selectionStart
+        let cursorLeft: string = obj.value.substr(0, cursorPosition)
+        let cursorRight: string = obj.value.substr(cursorPosition, obj.value.length)
+
+        let matches: RegExpMatchArray = cursorLeft.match(/^[^]+\n/)
+        if (matches) {
+          let match: string = matches[0]
+          let first: string = cursorLeft.substr(0, match.length)
+          let second: string = cursorLeft.substr(match.length)
+          obj.value = first + ' '.repeat(NUM_SPACES) + second + cursorRight
+          obj.selectionEnd = (first + ' '.repeat(NUM_SPACES) + second).length
+        }
+      }
+
+
+      if (((event.ctrlKey && !event.metaKey) || (!event.ctrlKey && event.metaKey)) && event.key === '[') {
+        event.preventDefault()
+
+        // ' '.repeat(NUM_SPACES)
+        let obj = contentRef.current
+        // 現在のカーソルの位置と、カーソルの左右の文字列を取得しておく
+        let cursorPosition: number = obj.selectionStart
+        let cursorLeft: string = obj.value.substr(0, cursorPosition)
+        let cursorRight: string = obj.value.substr(cursorPosition, obj.value.length)
+
+        let matches: RegExpMatchArray = cursorLeft.match(/^[^]+\n/)
+        if (matches) {
+          let match: string = matches[0]
+          let first: string = cursorLeft.substr(0, match.length)
+          let second: string = cursorLeft.substr(match.length)
+          second = second.replace(/\s\s\s\s/, '')
+          obj.value = first + second + cursorRight
+          obj.selectionEnd = (first + second).length
+        }
+      }
+    }
 
     return (<div>
       <Grid container spacing={2}>
@@ -164,12 +210,10 @@ class Edit {
               rows={25}
               rowsMax={25}
               value={content}
+              inputRef={contentRef}
               onChange={contentChange}
               onKeyDown={(event) => {
-                if (event.key === 'Tab') {
-                  event.preventDefault()                  
-                  setContent(content + ' '.repeat(NUM_SPACES))
-                }
+                tabFunction(event)
               }}
               variant="outlined"
               fullWidth
