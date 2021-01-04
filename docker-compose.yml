@@ -24,6 +24,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mysecretpassword1234}
       PASSWORD_SALT: ${PASSWORD_SALT:-mysecretpasswordhash}
+      WEB_HOST: ${WEB_HOST:-http://example.com}
   front:
     build: ./front
     volumes:
