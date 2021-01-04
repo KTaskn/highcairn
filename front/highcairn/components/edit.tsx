@@ -114,7 +114,7 @@ class Edit {
   }
 
   public rendering: React.FC = () => {
-    const contentRef = React.useRef()
+    const contentRef = React.useRef<HTMLInputElement>()
 
     const [title, setTitle] = React.useState(this.post.title)
     const [content, setContent] = React.useState(this.post.content)
