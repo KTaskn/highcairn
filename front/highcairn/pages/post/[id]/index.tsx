@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import Grid from '@material-ui/core/Grid'
 import FetchWrapper from '../../../utilities/fetchwrapper'
 import PostModel from '../../../models/post'
@@ -24,8 +25,17 @@ class Post extends React.Component<Props> {
 
   render() {
     if (this.props.postmodel) {
-      return (        
-        <div>
+      let site_url: string = process.env.SITE_URL + "/post/" + this.props.postmodel.id + "/"
+      let ogp_url: string = process.env.SITE_URL + "/api/ogp/" + this.props.postmodel.id + "/"
+      return (       
+        <div> 
+          <Head>
+            <meta name="twitter:card" content="summary" />
+            <meta property="og:url" content={ site_url } />
+            <meta property="og:title" content={ this.props.postmodel.title } />
+            <meta property="og:description" content={ this.props.postmodel.title } />
+            <meta property="og:image" content={ ogp_url } />
+          </Head>
           <Grid container spacing={2}>
             <Grid item xs={1}></Grid>
             <Grid item xs={11}>

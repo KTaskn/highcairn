@@ -7,6 +7,7 @@ from django.conf.urls import url
 
 from highcairnapp.urls import router as approuter
 from highcairnapp.sitemap import sitemap
+from highcairnapp.ogp import ogp
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -27,6 +28,7 @@ urlpatterns = [
     url('^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url('^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url('^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('api/ogp/<int:post_id>/', ogp),
     path('api/sitemap.xml/', sitemap),
     path('api/admin/', admin.site.urls),
     path('api/', include(approuter.urls))
