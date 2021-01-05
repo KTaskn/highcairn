@@ -6,6 +6,7 @@ module.exports = {
   },
   env: {
     TITLE: "HighCairn",
-    BACKEND_URL: "http://nginx:80"
+    BACKEND_URL: "http://nginx:80",
+    GOOGLE_TAG_MANAGER: "GTM-*****"
   }
 }
