@@ -2,6 +2,17 @@
 FROM python:3.6
 
 RUN TZ=Asia/Tokyo
+
+RUN apt-get update
+RUN apt-get install unzip
+
+# フォントデータをインストール
+ARG resources_dir=/resources
+RUN mkdir -p $resources_dir
+WORKDIR $resources_dir
+RUN wget -O Noto_Sans_JP.zip https://fonts.google.com/download?family=Noto%20Sans%20JP
+RUN unzip Noto_Sans_JP.zip
+
 # ソースを置くディレクトリを変数として格納                                                  
 ARG project_dir=/var/www
 
