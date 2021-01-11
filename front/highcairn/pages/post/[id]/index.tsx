@@ -30,7 +30,7 @@ class Post extends React.Component<Props> {
       return (       
         <div> 
           <Head>
-            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:card" content="summary_large_image" />
             <meta property="og:url" content={ site_url } />
             <meta property="og:title" content={ this.props.postmodel.title } />
             <meta property="og:description" content={ this.props.postmodel.title } />
