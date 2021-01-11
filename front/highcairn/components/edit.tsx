@@ -184,6 +184,7 @@ class Edit {
               value={title}
               onChange={titleChange}
               variant="outlined"
+              error = {title.length > 30 ? true : false }
               fullWidth
             />
           </Grid>
