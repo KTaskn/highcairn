@@ -20,8 +20,8 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 class ImageUploadSerializer(serializers.Serializer):
-    id = serializers.ReadOnlyField()
-    content_base64 = serializers.CharField()
+    id = serializers.UUIDField(read_only = True)
+    content_base64 = serializers.CharField(write_only = True)
 
     def create(self, validated_data):
         content_base64 = validated_data.pop('content_base64')
@@ -29,7 +29,6 @@ class ImageUploadSerializer(serializers.Serializer):
             image_obj = Image.create_from_base64(content_base64)
             thumbnail_obj = image_obj.create_thumbnail()
             return {
-                "content_base64": content_base64,
                 "id": image_obj.id
             }
         except Exception as ex:
