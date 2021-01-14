@@ -4,7 +4,7 @@ import uuid
 from PIL import Image as pilImage
 
 from django.db import models
-from .utilities import Resizer
+from .utilities import Resizer, Converter
 
 # Create your models here.
 class Post(models.Model):
@@ -40,11 +40,10 @@ class Image(models.Model):
 
     @classmethod
     def create_from_base64(cls, content_base64):
-        img_binary = base64.b64decode(content_base64)
-        image = pilImage.open(BytesIO(img_binary))
-        image.verify()
-        return Image.objects.create(content=img_binary)
-
+        converter = Converter()
+        image_bytes = converter.convert(content_base64)
+        return Image.objects.create(content=image_bytes.getvalue())
+        
 class ImageThumbnail(models.Model):
     image = models.ForeignKey(Image, primary_key=True, on_delete=models.CASCADE)
     content = models.BinaryField()
