@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -14,7 +14,9 @@ import MenuList from '@material-ui/core/MenuList'
 import Viewer from '../components/viewer'
 import FetchWrapper, { Response } from '../utilities/fetchwrapper'
 import Post from '../models/post'
+import ImageUpload from '../models/imageupload'
 import TabFunction from '../utilities/tabfunction'
+import InsertText from '../utilities/inserttext'
 
 interface EditProps {
   init_content: string,
@@ -151,7 +153,7 @@ class Edit {
         let end = obj.selectionEnd
 
         // タブ挿入後のデータを取得する
-        obj.value = this.tabFunction.shiftTab(obj.value, obj.selectionStart, obj.selectionEnd)
+        setContent(this.tabFunction.shiftTab(obj.value, obj.selectionStart, obj.selectionEnd))
 
         // 新しい選択範囲に変更する  // 先頭が追加されたのでその分詰める
         obj.selectionStart = start + NUM_SPACES
@@ -168,11 +170,50 @@ class Edit {
         let end = obj.selectionEnd
 
         // タブ削除後のデータを取得する
-        obj.value = this.tabFunction.unshiftTab(obj.value, obj.selectionStart, obj.selectionEnd)
+        setContent(this.tabFunction.unshiftTab(obj.value, obj.selectionStart, obj.selectionEnd))
 
         // 新しい選択範囲に変更する  // 先頭が削除されたのでその分詰める
         obj.selectionStart = start - NUM_SPACES
         obj.selectionEnd = end + obj.value.length - before.length
+      }
+    }
+
+    // 画像リンク挿入時にローディング中に表示する
+    const LOADING_TEXT_IMAGE_LINK: string = '![](loading...)'
+
+    // 画像リンクのテンプレート
+    const TEMPLATE_IMAGE_LINK = (id: string): string => (
+      `[![${id}](/api/thumbnail/${id}/)](/api/image/${id}/)`
+    )
+
+    // 画像をアップロードする
+    const onDropImageUpload = (event) => {
+      // 通常の動作（ポップアップ）は行わない
+      event.preventDefault()
+
+      // ファイルを読み込む
+      const files: FileList = event.dataTransfer.files
+      if (files.length !== 1 || files[0].type.indexOf('image') !== 0) {
+        console.log('not Image')
+      } else {
+        console.log('Image')
+        const inserttext: InsertText = new InsertText()
+        let obj = contentRef.current
+        const current_value: string = obj.value
+        // 画像リンクを挿入
+        setContent(inserttext.insert(current_value, LOADING_TEXT_IMAGE_LINK, obj.selectionStart))
+
+        let file: File = files[0]
+        const reader: FileReader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = async (event) => {
+          let content_base64: string = (event.target.result as string).replace(/data:.*\/.*;base64,/, '')
+          let image: ImageUpload = new ImageUpload({content_base64: content_base64})
+          let response: Response<ImageUpload> = await FetchWrapper.post<ImageUpload, ImageUpload>('/api/imageupload/', image)
+
+          // 画像リンクを挿入
+          setContent(inserttext.insert(current_value, TEMPLATE_IMAGE_LINK(response.bound.id), obj.selectionStart))
+        }
       }
     }
 
@@ -208,11 +249,12 @@ class Edit {
               value={content}
               inputRef={contentRef}
               onChange={contentChange}
-              onKeyDown={(event) => {
-                tab(event)
-              }}
+              onKeyDown={tab}
               variant="outlined"
               fullWidth
+              onDragEnter={() => console.log('onDragEnter')}
+              onDragLeave={() => console.log('onDragLeave')}
+              onDrop={onDropImageUpload}
             />
           </Grid>
           <Grid item xs={6}>
