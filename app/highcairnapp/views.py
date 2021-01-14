@@ -38,6 +38,6 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class ImageUploadViewSet(mixins.CreateModelMixin,
                         viewsets.GenericViewSet):
-    # authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = ImageUploadSerializer

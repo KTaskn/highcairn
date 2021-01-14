@@ -252,8 +252,6 @@ class Edit {
               onKeyDown={tab}
               variant="outlined"
               fullWidth
-              onDragEnter={() => console.log('onDragEnter')}
-              onDragLeave={() => console.log('onDragLeave')}
               onDrop={onDropImageUpload}
             />
           </Grid>
