@@ -1,7 +1,3 @@
-import base64
-from io import BytesIO
-from PIL import Image as pilImage
-
 from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
@@ -30,13 +26,11 @@ class ImageUploadSerializer(serializers.Serializer):
     def create(self, validated_data):
         content_base64 = validated_data.pop('content_base64')
         try:
-            img_binary = base64.b64decode(content_base64)
-            image = pilImage.open(BytesIO(img_binary))
-            image.verify()
-            img_obj = Image.objects.create(content=img_binary)        
+            image_obj = Image.create_from_base64(content_base64)
+            thumbnail_obj = image_obj.create_thumbnail()
             return {
                 "content_base64": content_base64,
-                "id": img_obj.id
+                "id": image_obj.id
             }
         except Exception as ex:
             raise serializers.ValidationError({
