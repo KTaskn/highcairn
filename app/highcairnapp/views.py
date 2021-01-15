@@ -8,8 +8,8 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from rest_framework import mixins, generics
-from .models import Post
-from .serializers import PostSerializer, PostUpdateSerializer
+from .models import Post, Image
+from .serializers import PostSerializer, PostUpdateSerializer, ImageUploadSerializer
 
 class CheckViewSet(viewsets.ViewSet):
     authentication_classes = [SessionAuthentication]
@@ -35,3 +35,9 @@ class PostViewSet(viewsets.ModelViewSet):
     ordering_fields = ['id']
     ordering = ['id']
     serializer_class = PostUpdateSerializer
+
+class ImageUploadViewSet(mixins.CreateModelMixin,
+                        viewsets.GenericViewSet):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = ImageUploadSerializer
