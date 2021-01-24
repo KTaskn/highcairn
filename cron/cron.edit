@@ -1,0 +1,3 @@
+#!/bin/sh
+
+30 8 * * * /work/run.sh

@@ -46,6 +46,14 @@ services:
       - "${NGINX_PORT:-8888}:80"
     environment:
       TZ: "Asia/Tokyo"
+  cron:
+    build: ./cron
+    links:
+      - db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mysecretpassword1234}
+      
       
 # 事前にdocker volume create --name highcairn_volume_dbを実行すること
 volumes:
