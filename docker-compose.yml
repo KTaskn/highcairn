@@ -1,5 +1,20 @@
 version: '3'
 services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - ${NGINX_CONF-./nginx/development.conf}:/etc/nginx/conf.d/default.conf
+      - ./app/static:/static
+    ports:
+      - "${NGINX_PORT_SSL:-18888}:443"
+      - "${NGINX_PORT:-8888}:80"
+    environment:
+      TZ: "Asia/Tokyo"
+    networks:
+      - highcairn-nw
+    depends_on:
+      - front
+      - app
   db:
     image: postgres:12.4
     ports:
@@ -11,10 +26,10 @@ services:
       TZ: "Asia/Tokyo"
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mysecretpassword1234}
+    networks:
+      - highcairn-nw
   app:
     build: ./app
-    links:
-      - db
     volumes:
       - ./app:/var/www
     ports:
@@ -25,6 +40,10 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mysecretpassword1234}
       PASSWORD_SALT: ${PASSWORD_SALT:-mysecretpasswordhash}
       WEB_HOST: ${WEB_HOST:-http://example.com}
+    networks:
+      - highcairn-nw
+    depends_on: 
+      - db
   front:
     build: ./front
     volumes:
@@ -33,29 +52,24 @@ services:
       - /var/www/highcairn/node_modules
     ports:
       - "3000:3000"
-  nginx:
-    build: ./nginx
-    volumes:
-      - ${NGINX_CONF-./nginx/development.conf}:/etc/nginx/conf.d/default.conf
-      - ./app/static:/static
-    links:
-      - app
-      - front
-    ports:
-      - "${NGINX_PORT_SSL:-18888}:443"
-      - "${NGINX_PORT:-8888}:80"
-    environment:
-      TZ: "Asia/Tokyo"
+    networks:
+      - highcairn-nw
   cron:
     build: ./cron
-    links:
-      - db
+    networks:
+      - highcairn-nw
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mysecretpassword1234}
+    depends_on: 
+      - db
       
       
 # 事前にdocker volume create --name highcairn_volume_dbを実行すること
 volumes:
   highcairn_volume_db:
+    external: true
+
+networks:
+  highcairn-nw:
     external: true
